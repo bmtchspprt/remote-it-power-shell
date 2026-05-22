@@ -5,19 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PowerShell Journey — Gateway Toolkit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:        #0a0e14;
-    --surface:   #0d1420;
-    --border:    #1a2a3a;
-    --accent:    #00d4ff;
-    --accent2:   #00ff9f;
-    --warn:      #ff6b35;
-    --text:      #c8d8e8;
-    --text-dim:  #4a6a8a;
-    --mono:      'Share Tech Mono', monospace;
-    --sans:      'Rajdhani', sans-serif;
+    --bg:        #f5f7fa;
+    --surface:   #ffffff;
+    --border:    #e2e8f0;
+    --border2:   #cbd5e1;
+    --accent:    #0ea5e9;
+    --accent-dk: #0284c7;
+    --accent2:   #10b981;
+    --warn:      #f59e0b;
+    --danger:    #ef4444;
+    --text:      #1e293b;
+    --text-mid:  #475569;
+    --text-dim:  #94a3b8;
+    --mono:      'JetBrains Mono', monospace;
+    --sans:      'Inter', sans-serif;
+    --radius:    8px;
+    --shadow:    0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.08);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,228 +34,214 @@
     color: var(--text);
     font-family: var(--sans);
     min-height: 100vh;
-    overflow-x: hidden;
   }
 
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background:
-      repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(0,212,255,.03) 29px),
-      repeating-linear-gradient(90deg, transparent, transparent 28px, rgba(0,212,255,.03) 29px);
-    pointer-events: none; z-index: 0;
-  }
-
+  /* ── HEADER ── */
   header {
-    position: relative; z-index: 10;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 32px;
+    background: var(--surface);
     border-bottom: 1px solid var(--border);
-    background: linear-gradient(90deg, rgba(0,212,255,.06), transparent);
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: var(--shadow);
+    position: sticky; top: 0; z-index: 100;
   }
-  .logo { font-family: var(--mono); font-size: 1.1rem; color: var(--accent); letter-spacing: 2px; }
+  .logo { font-family: var(--mono); font-size: 1rem; color: var(--accent-dk); font-weight: 600; letter-spacing: .5px; }
   .logo span { color: var(--accent2); }
   .status-pill {
-    font-family: var(--mono); font-size: .75rem;
-    padding: 4px 14px; border-radius: 20px;
-    border: 1px solid var(--accent2); color: var(--accent2);
-    animation: pulse 2.5s infinite;
+    font-size: .75rem; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px;
+    background: #ecfdf5; border: 1px solid #6ee7b7; color: #059669;
   }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
 
   /* ── LAYOUT ── */
-  .shell {
-    position: relative; z-index: 5;
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    height: calc(100vh - 61px);
-  }
+  .shell { display: grid; grid-template-columns: 200px 1fr; height: calc(100vh - 57px); }
 
   aside {
+    background: var(--surface);
     border-right: 1px solid var(--border);
-    padding: 28px 0;
-    background: linear-gradient(180deg, rgba(0,212,255,.03), transparent);
-    display: flex; flex-direction: column; gap: 4px;
+    padding: 24px 0;
+    display: flex; flex-direction: column; gap: 2px;
   }
   .aside-title {
-    font-family: var(--mono); font-size: .62rem;
-    color: var(--text-dim); letter-spacing: 3px;
-    padding: 0 20px 14px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 6px;
+    font-size: .65rem; font-weight: 700; letter-spacing: 2px;
+    color: var(--text-dim); text-transform: uppercase;
+    padding: 0 18px 12px;
+    border-bottom: 1px solid var(--border); margin-bottom: 6px;
   }
   .step-btn {
-    display: flex; align-items: center; gap: 12px;
-    width: 100%; padding: 13px 20px;
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 11px 18px;
     background: none; border: none; cursor: pointer;
-    text-align: left; transition: background .15s;
+    text-align: left; transition: background .15s; border-radius: 0;
   }
-  .step-btn:hover { background: rgba(0,212,255,.07); }
-  .step-btn.active { background: rgba(0,212,255,.12); border-right: 2px solid var(--accent); }
+  .step-btn:hover { background: #f0f9ff; }
+  .step-btn.active { background: #e0f2fe; border-right: 3px solid var(--accent); }
+  .step-btn.done .step-num { background: var(--accent2); border-color: var(--accent2); color: #fff; }
   .step-num {
-    width: 26px; height: 26px; border-radius: 50%;
+    width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    font-family: var(--mono); font-size: .75rem;
-    border: 1px solid var(--text-dim); color: var(--text-dim);
-    flex-shrink: 0; transition: all .2s;
+    font-family: var(--mono); font-size: .72rem; font-weight: 600;
+    border: 2px solid var(--border2); color: var(--text-dim);
+    transition: all .2s;
   }
-  .step-btn.active .step-num { border-color: var(--accent); color: var(--accent); }
-  .step-btn.done .step-num { background: var(--accent2); border-color: var(--accent2); color: #000; }
-  .step-label { font-size: .95rem; font-weight: 600; color: var(--text); line-height: 1.3; }
-  .step-btn.active .step-label { color: var(--accent); }
-  .step-sub { font-size: .72rem; color: var(--text-dim); margin-top: 2px; }
+  .step-btn.active .step-num { border-color: var(--accent); color: var(--accent); background: #e0f2fe; }
+  .step-label { font-size: .88rem; font-weight: 600; color: var(--text-mid); }
+  .step-btn.active .step-label { color: var(--accent-dk); }
+  .step-sub { font-size: .7rem; color: var(--text-dim); margin-top: 1px; }
 
   /* ── MAIN ── */
-  main { overflow-y: auto; padding: 36px 40px; }
+  main { overflow-y: auto; padding: 32px 40px; }
 
   .panel { display: none; }
-  .panel.active { display: block; animation: fadeIn .25s ease; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+  .panel.active { display: block; animation: fadeIn .2s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
 
-  .progress-wrap {
-    background: var(--border); border-radius: 3px;
-    height: 4px; margin-bottom: 28px; overflow: hidden;
-  }
-  .progress-bar {
-    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 3px; transition: width .4s ease;
-  }
+  .progress-wrap { background: var(--border); border-radius: 4px; height: 4px; margin-bottom: 28px; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 4px; transition: width .4s ease; }
 
-  h2 { font-size: 1.6rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; letter-spacing: .5px; }
-  .subtitle { font-family: var(--mono); font-size: .75rem; color: var(--text-dim); margin-bottom: 28px; }
+  h2 { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .subtitle { font-size: .82rem; color: var(--text-dim); margin-bottom: 24px; font-family: var(--mono); }
 
-  /* ── STEP FLOW (numbered instructions) ── */
-  .flow { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+  /* ── FLOW ITEMS ── */
+  .flow { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+
   .flow-item {
-    display: flex; gap: 16px; align-items: flex-start;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 8px; padding: 18px 20px;
-    transition: border-color .2s;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
   }
-  .flow-item.highlight { border-color: var(--accent); box-shadow: 0 0 16px rgba(0,212,255,.08); }
+  .flow-item.highlight { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14,165,233,.08); }
+
+  /* single row layout inside flow-item */
+  .flow-row {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
   .flow-num {
-    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    font-family: var(--mono); font-size: .8rem; font-weight: 700;
-    background: rgba(0,212,255,.12); border: 1px solid var(--accent); color: var(--accent);
+    font-family: var(--mono); font-size: .75rem; font-weight: 700;
+    background: #e0f2fe; border: 2px solid var(--accent); color: var(--accent-dk);
   }
-  .flow-body { flex: 1; }
-  .flow-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-  .flow-desc { font-size: .88rem; color: var(--text-dim); line-height: 1.6; }
-  .flow-desc code { font-family: var(--mono); color: var(--accent2); }
-  .flow-desc a { color: var(--accent); }
+  .flow-label { font-size: .95rem; font-weight: 600; color: var(--text); white-space: nowrap; }
+  .flow-desc { font-size: .85rem; color: var(--text-mid); }
+  .flow-desc code { font-family: var(--mono); color: var(--accent-dk); background: #f0f9ff; padding: 1px 5px; border-radius: 3px; }
 
-  /* gateway name input inside flow */
-  .gw-input-row { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
-  .gw-input-row input {
-    padding: 8px 14px; background: var(--bg);
-    border: 1px solid var(--border); color: var(--text);
+  /* step 1 row: num + label + button all inline */
+  .s1-row { display: flex; align-items: center; gap: 14px; }
+
+  /* step 2 row: num + label + desc all inline */
+  .s2-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+  /* step 3: top row inline, input below */
+  .s3-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+  .s3-input { display: flex; gap: 10px; align-items: center; }
+  .s3-input input {
+    padding: 9px 14px; background: #f8fafc;
+    border: 1px solid var(--border2); color: var(--text);
     font-family: var(--mono); font-size: .9rem;
-    border-radius: 4px; outline: none; width: 220px;
-    transition: border-color .2s;
+    border-radius: var(--radius); outline: none; width: 280px;
+    transition: border-color .2s, box-shadow .2s;
   }
-  .gw-input-row input:focus { border-color: var(--accent); }
+  .s3-input input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14,165,233,.12); }
+  .s3-input input::placeholder { color: var(--text-dim); }
 
-  /* endpoint paste area */
-  .paste-row { display: flex; gap: 10px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
-  .paste-row input {
-    padding: 10px 16px; background: var(--bg);
-    border: 1px solid var(--accent); color: var(--accent2);
-    font-family: var(--mono); font-size: .95rem;
-    border-radius: 4px; outline: none; flex: 1; min-width: 220px;
-    transition: border-color .2s;
-  }
-  .paste-row input:focus { border-color: var(--accent2); box-shadow: 0 0 10px rgba(0,255,159,.1); }
-  .paste-row input::placeholder { color: var(--text-dim); }
-
-  /* SSH result box */
+  /* step 4: top row inline, command box below */
+  .s4-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
   .ssh-box {
-    background: #050a10; border: 1px solid var(--accent);
-    border-radius: 6px; padding: 16px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 16px; margin-top: 12px;
-    box-shadow: 0 0 20px rgba(0,212,255,.1);
+    background: #f8fafc; border: 1px solid var(--accent);
+    border-radius: var(--radius); padding: 13px 18px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    box-shadow: 0 0 0 3px rgba(14,165,233,.06);
   }
-  .ssh-cmd { font-family: var(--mono); font-size: 1rem; color: var(--accent2); word-break: break-all; }
-  .ssh-cmd .ps-dollar { color: var(--text-dim); margin-right: 8px; }
+  .ssh-cmd { font-family: var(--mono); font-size: .95rem; color: #0369a1; word-break: break-all; }
+  .ssh-cmd .ps-dollar { color: var(--text-dim); margin-right: 6px; }
   .copy-btn {
-    flex-shrink: 0; padding: 7px 16px;
-    font-family: var(--mono); font-size: .72rem;
-    background: transparent; border: 1px solid var(--accent);
-    color: var(--accent); border-radius: 4px; cursor: pointer; transition: all .15s;
+    flex-shrink: 0; padding: 6px 14px;
+    font-family: var(--mono); font-size: .7rem; font-weight: 600;
+    background: var(--accent); border: none; color: #fff;
+    border-radius: 5px; cursor: pointer; transition: all .15s;
   }
-  .copy-btn:hover { background: var(--accent); color: #000; }
-  .copy-btn.copied { border-color: var(--accent2); color: var(--accent2); }
+  .copy-btn:hover { background: var(--accent-dk); }
+  .copy-btn.copied { background: var(--accent2); }
 
   /* ── ALERTS ── */
   .alert {
-    border-radius: 6px; padding: 13px 18px; margin: 16px 0;
-    font-size: .9rem; line-height: 1.6;
-    display: flex; gap: 12px; align-items: flex-start;
+    border-radius: var(--radius); padding: 12px 16px; margin: 14px 0;
+    font-size: .85rem; line-height: 1.6;
+    display: flex; gap: 10px; align-items: flex-start;
   }
-  .alert-warn { background: rgba(255,107,53,.07); border-left: 3px solid var(--warn); }
-  .alert-info { background: rgba(0,212,255,.07); border-left: 3px solid var(--accent); }
-  .alert-success { background: rgba(0,255,159,.07); border-left: 3px solid var(--accent2); }
-  .alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .alert-warn { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+  .alert-info { background: #f0f9ff; border: 1px solid #bae6fd; color: #0c4a6e; }
+  .alert-success { background: #f0fdf4; border: 1px solid #86efac; color: #14532d; }
+  .alert-icon { flex-shrink: 0; font-size: .95rem; margin-top: 1px; }
 
   /* ── BUTTONS ── */
   .btn {
-    padding: 9px 20px; border-radius: 4px;
-    font-family: var(--sans); font-weight: 700; font-size: .88rem;
-    cursor: pointer; border: none; transition: all .15s; letter-spacing: .5px;
+    padding: 8px 18px; border-radius: var(--radius);
+    font-family: var(--sans); font-weight: 600; font-size: .85rem;
+    cursor: pointer; border: none; transition: all .15s;
   }
-  .btn-primary { background: var(--accent); color: #000; }
-  .btn-primary:hover { background: #00eeff; box-shadow: 0 0 14px rgba(0,212,255,.4); }
-  .btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-warn { background: var(--warn); color: #fff; }
-  .btn-warn:hover { background: #ff8555; }
-  .btn-success { background: var(--accent2); color: #000; }
-  .btn-success:hover { background: #00ffbb; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-dk); box-shadow: 0 2px 8px rgba(14,165,233,.3); }
+  .btn-ghost { background: #fff; color: var(--text-mid); border: 1px solid var(--border2); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent-dk); }
+  .btn-warn { background: #f59e0b; color: #fff; }
+  .btn-warn:hover { background: #d97706; }
+  .btn-success { background: var(--accent2); color: #fff; }
+  .btn-success:hover { background: #059669; }
+  .btn-danger { background: #ef4444; color: #fff; }
+  .btn-danger:hover { background: #dc2626; }
 
   .nav-row {
     display: flex; justify-content: space-between; align-items: center;
-    margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);
+    margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border);
   }
 
-  /* ── COMMANDS TABLE ── */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 20px 24px; margin-bottom: 16px; }
-  .card-title { font-family: var(--mono); font-size: .68rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
+  /* ── COMMANDS PAGE ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .card-title { font-size: .68rem; font-weight: 700; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 14px; }
 
   table { width: 100%; border-collapse: collapse; }
-  th { font-family: var(--mono); font-size: .66rem; color: var(--text-dim); letter-spacing: 2px; text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); text-transform: uppercase; }
-  td { padding: 11px 12px; font-size: .9rem; border-bottom: 1px solid rgba(26,42,58,.5); }
+  th { font-size: .7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); padding: 8px 12px; border-bottom: 2px solid var(--border); text-align: left; }
+  td { padding: 9px 12px; font-size: .88rem; border-bottom: 1px solid var(--border); color: var(--text-mid); }
+  td:first-child { color: var(--text); }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(0,212,255,.04); }
+  tr:hover td { background: #f8fafc; }
 
-  .quick-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
-  #cmdCopied { font-family: var(--mono); font-size: .75rem; color: var(--accent2); margin-top: 10px; opacity: 0; transition: opacity .3s; min-height: 18px; }
+  .quick-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  #cmdCopied { font-family: var(--mono); font-size: .75rem; color: var(--accent2); margin-top: 10px; min-height: 18px; opacity: 0; transition: opacity .3s; }
 
   /* ── TROUBLESHOOT ── */
+  .cause-table td { padding: 7px 12px; }
+  .cause-table tr:hover td { background: #f8fafc; }
+
   .checklist { list-style: none; }
-  .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: .93rem; }
+  .checklist li { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: .88rem; color: var(--text-mid); }
   .checklist li:last-child { border-bottom: none; }
   .check-icon {
-    width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;
+    width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; margin-top: 1px;
     display: flex; align-items: center; justify-content: center;
-    font-size: .8rem; border: 1px solid var(--border);
-    cursor: pointer; transition: all .15s; user-select: none;
+    font-size: .7rem; border: 2px solid var(--border2);
+    cursor: pointer; transition: all .15s; user-select: none; background: #fff;
   }
-  .check-icon.checked { background: var(--accent2); border-color: var(--accent2); color: #000; }
-  .badge-offline { display: inline-block; padding: 1px 8px; border-radius: 10px; font-family: var(--mono); font-size: .7rem; background: rgba(255,107,53,.15); color: var(--warn); border: 1px solid var(--warn); }
+  .check-icon.checked { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+  .badge-offline { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: .72rem; font-weight: 600; background: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5; }
 
-  a { color: var(--accent); text-decoration: none; }
+  a { color: var(--accent-dk); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
   @media (max-width: 650px) {
     .shell { grid-template-columns: 1fr; }
-    aside { flex-direction: row; overflow-x: auto; padding: 12px 0; border-right: none; border-bottom: 1px solid var(--border); }
+    aside { flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 10px 0; }
     .aside-title { display: none; }
-    main { padding: 20px 18px; }
+    main { padding: 20px 16px; }
+    .s3-input input { width: 100%; }
   }
 </style>
 </head>
@@ -256,90 +249,79 @@
 
 <header>
   <div class="logo">PS_JOURNEY <span>// Gateway Toolkit</span></div>
-  <div class="status-pill">● REMOTE.IT READY</div>
+  <div class="status-pill">● Remote.it Ready</div>
 </header>
 
 <div class="shell">
 
   <!-- SIDEBAR -->
   <aside>
-    <div class="aside-title">STEPS</div>
+    <div class="aside-title">Steps</div>
     <button class="step-btn active" onclick="goStep(0)" id="sb0">
       <div class="step-num">1</div>
       <div><div class="step-label">Connect</div><div class="step-sub">Find & SSH in</div></div>
     </button>
     <button class="step-btn" onclick="goStep(1)" id="sb1">
       <div class="step-num">2</div>
-      <div><div class="step-label">Run Commands</div><div class="step-sub">Sensors · reboot · more</div></div>
+      <div><div class="step-label">Run Commands</div><div class="step-sub">Sensors · reboot</div></div>
     </button>
     <button class="step-btn" onclick="goStep(2)" id="sb2">
       <div class="step-num">3</div>
-      <div><div class="step-label">Troubleshoot</div><div class="step-sub">Offline causes & fixes</div></div>
+      <div><div class="step-label">Troubleshoot</div><div class="step-sub">Offline causes</div></div>
     </button>
   </aside>
 
-  <!-- MAIN -->
   <main>
     <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:33%"></div></div>
 
     <!-- ══ PAGE 1: CONNECT ══ -->
     <div class="panel active" id="panel0">
       <h2>Connect to Gateway</h2>
-      <div class="subtitle">// remote.it → find gateway → paste endpoint → get powershell command</div>
+      <div class="subtitle">// open remote.it → find gateway → paste endpoint → run powershell command</div>
 
       <div class="flow">
 
-        <!-- 1. Open Remote.it -->
+        <!-- Step 1 -->
         <div class="flow-item">
-          <div class="flow-num">1</div>
-          <div class="flow-body">
-            <div class="flow-title">Open Remote.it and search for your gateway</div>
-            <div class="flow-desc">
-              Go to <a href="https://app.remote.it/#/devices" target="_blank">app.remote.it/#/devices</a> and search for your gateway name.
-              <div class="gw-input-row">
-                <input id="gwName" type="text" placeholder="e.g. CompanyTX-01" oninput="updateGwName(this.value)">
-                <a href="https://app.remote.it/#/devices" target="_blank" class="btn btn-primary">Open Remote.it ↗</a>
-              </div>
-            </div>
+          <div class="s1-row">
+            <div class="flow-num">1</div>
+            <div class="flow-label">Open Remote.it and find your gateway</div>
+            <a href="https://app.remote.it/#/devices" target="_blank" class="btn btn-primary" style="margin-left:auto;">Open Remote.it ↗</a>
           </div>
         </div>
 
-        <!-- 2. Click SSH -->
+        <!-- Step 2 -->
         <div class="flow-item">
-          <div class="flow-num">2</div>
-          <div class="flow-body">
-            <div class="flow-title">Click the SSH service and connect</div>
-            <div class="flow-desc">
-              In the device list, click <strong id="gwNameDisplay">your gateway</strong>. Find the <code>SSH</code> service and click <strong>Connect</strong>. Remote.it will generate a public endpoint.
-            </div>
+          <div class="s2-row">
+            <div class="flow-num">2</div>
+            <div class="flow-label">Search for your gateway name</div>
+            <div class="flow-desc">(e.g. <code>CompanyTX-01</code>), click it, find the <code>SSH</code> service, and click <strong>Connect</strong></div>
           </div>
         </div>
 
-        <!-- 3. Paste endpoint -->
+        <!-- Step 3 -->
         <div class="flow-item highlight">
-          <div class="flow-num">3</div>
-          <div class="flow-body">
-            <div class="flow-title">Copy the public endpoint and paste it here</div>
-            <div class="flow-desc">
-              The endpoint looks like <code>proxy16.rt3.io:37081</code> — copy it from Remote.it and paste below.
-              <div class="paste-row">
-                <input id="epFull" type="text" placeholder="e.g. proxy16.rt3.io:37081" oninput="autoSplit(this)">
-                <button class="btn btn-ghost" onclick="pasteFromClipboard()">📋 Paste</button>
-              </div>
-            </div>
+          <div class="s3-top">
+            <div class="flow-num">3</div>
+            <div class="flow-label">Copy the public endpoint from Remote.it and paste it here</div>
+            <div class="flow-desc" style="color:var(--text-dim);">(e.g. <code>proxy16.rt3.io:37081</code>)</div>
+          </div>
+          <div class="s3-input">
+            <input id="epFull" type="text" placeholder="proxy16.rt3.io:37081" oninput="autoSplit(this)">
+            <button class="btn btn-ghost" onclick="pasteFromClipboard()">📋 Paste</button>
           </div>
         </div>
 
-        <!-- 4. SSH command output -->
+        <!-- Step 4 -->
         <div class="flow-item highlight">
-          <div class="flow-num">4</div>
-          <div class="flow-body">
-            <div class="flow-title">Your PowerShell command</div>
-            <div class="flow-desc">Copy this command, open PowerShell, paste it, and press Enter. Enter the password when prompted.</div>
-            <div class="ssh-box">
-              <div class="ssh-cmd"><span class="ps-dollar">PS&gt;</span><span id="sshCmd">ssh -p &lt;port&gt; binmaster@&lt;host&gt;</span></div>
-              <button class="copy-btn" id="copyBtn" onclick="copySSH()">COPY</button>
-            </div>
+          <div class="s4-top">
+            <div class="flow-num">4</div>
+            <div class="flow-label">Your PowerShell command — copy, open PowerShell, paste &amp; press Enter</div>
+            <div class="flow-desc" style="color:var(--text-dim);">Enter password when prompted</div>
+          </div>
+          <div class="ssh-box">
+            <div class="ssh-cmd"><span class="ps-dollar">PS&gt;</span><span id="sshCmd">ssh -p &lt;port&gt; binmaster@&lt;host&gt;</span></div>
+            <button class="copy-btn" id="copyBtn" onclick="copySSH()">COPY</button>
           </div>
         </div>
 
@@ -347,7 +329,7 @@
 
       <div class="alert alert-warn">
         <div class="alert-icon">⚠️</div>
-        <div><strong>Endpoints are time-limited.</strong> If the connection drops or the endpoint expires, return to Remote.it, click the SSH service again, and paste the new endpoint above.</div>
+        <div><strong>Endpoints are time-limited.</strong> If the connection drops or expires, return to Remote.it, click the SSH service again, and paste the new endpoint in Step 3.</div>
       </div>
 
       <div class="alert alert-info">
@@ -367,39 +349,39 @@
       <div class="subtitle">// once connected via ssh — use these commands on the gateway</div>
 
       <div class="card">
-        <div class="card-title">COMMAND REFERENCE</div>
+        <div class="card-title">Command Reference</div>
         <table>
           <thead>
             <tr><th>Command</th><th>Purpose</th><th>Notes</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td><code style="font-family:var(--mono);color:var(--accent2)">bcsensors</code></td>
+              <td><code style="font-family:var(--mono);color:#0369a1">bcsensors</code></td>
               <td>View sensor readings</td>
               <td>Also sends manual readings to BinCloud</td>
             </tr>
             <tr>
-              <td><code style="font-family:var(--mono);color:var(--warn)">sudo reboot</code></td>
+              <td><code style="font-family:var(--mono);color:#b91c1c">sudo reboot</code></td>
               <td>Reboot the gateway</td>
               <td>Only possible via SSH</td>
             </tr>
             <tr>
-              <td><code style="font-family:var(--mono);color:var(--accent)">uptime</code></td>
+              <td><code style="font-family:var(--mono);color:#0369a1">uptime</code></td>
               <td>How long gateway has been running</td>
               <td>Good first diagnostic</td>
             </tr>
             <tr>
-              <td><code style="font-family:var(--mono);color:var(--accent)">ping -c 4 8.8.8.8</code></td>
+              <td><code style="font-family:var(--mono);color:#0369a1">ping -c 4 8.8.8.8</code></td>
               <td>Test internet connectivity</td>
               <td>Rules out network issues</td>
             </tr>
             <tr>
-              <td><code style="font-family:var(--mono);color:var(--accent)">df -h</code></td>
+              <td><code style="font-family:var(--mono);color:#0369a1">df -h</code></td>
               <td>Check disk space</td>
               <td>Ensure storage is not full</td>
             </tr>
             <tr>
-              <td><code style="font-family:var(--mono);color:var(--accent)">systemctl status remoteit</code></td>
+              <td><code style="font-family:var(--mono);color:#0369a1">systemctl status remoteit</code></td>
               <td>Remote.it agent status</td>
               <td>Verify the agent is running</td>
             </tr>
@@ -408,10 +390,10 @@
       </div>
 
       <div class="card">
-        <div class="card-title">QUICK COPY</div>
+        <div class="card-title">Quick Copy</div>
         <div class="quick-btns">
           <button class="btn btn-success" onclick="copyCmd('bcsensors')">bcsensors</button>
-          <button class="btn btn-warn"    onclick="copyCmd('sudo reboot')">sudo reboot</button>
+          <button class="btn btn-danger"  onclick="copyCmd('sudo reboot')">sudo reboot</button>
           <button class="btn btn-ghost"   onclick="copyCmd('uptime')">uptime</button>
           <button class="btn btn-ghost"   onclick="copyCmd('ping -c 4 8.8.8.8')">ping</button>
           <button class="btn btn-ghost"   onclick="copyCmd('df -h')">df -h</button>
@@ -442,26 +424,26 @@
       </div>
 
       <div class="card">
-        <div class="card-title">POSSIBLE CAUSES</div>
-        <table>
+        <div class="card-title">Possible Causes</div>
+        <table class="cause-table">
           <thead><tr><th>#</th><th>Cause</th><th>Action</th></tr></thead>
           <tbody>
             <tr><td>1</td><td>Gateway is powered down</td><td>Check physical power / PDU / breaker</td></tr>
             <tr><td>2</td><td>Network cable / WiFi disconnected</td><td>Inspect Ethernet connection on the gateway</td></tr>
-            <tr><td>3</td><td>Customer firewall blocking outbound traffic</td><td>Ask IT to whitelist outbound TCP for Remote.it</td></tr>
+            <tr><td>3</td><td>Firewall blocking outbound traffic</td><td>Ask IT to whitelist outbound TCP for Remote.it</td></tr>
             <tr><td>4</td><td>Hardware damage to gateway unit</td><td>May need a replacement unit shipped</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="card">
-        <div class="card-title">DIAGNOSTIC CHECKLIST</div>
+        <div class="card-title">Diagnostic Checklist</div>
         <ul class="checklist">
           <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>Confirm gateway shows <span class="badge-offline">OFFLINE</span> in Remote.it — not just slow to respond</span></li>
           <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>Ask on-site contact to check power LEDs on the gateway unit</span></li>
           <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>Ask on-site contact to re-seat or replace the Ethernet cable</span></li>
           <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>Check whether the customer recently changed firewall or router rules</span></li>
-          <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>If all above checks pass — escalate for possible hardware replacement</span></li>
+          <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>If all checks pass — escalate for possible hardware replacement</span></li>
         </ul>
       </div>
 
@@ -482,14 +464,8 @@
     document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('panel' + n).classList.add('active');
     document.getElementById('sb' + n).classList.add('active');
-    // mark previous steps done
     for (let i = 0; i < n; i++) document.getElementById('sb' + i).classList.add('done');
-    const pct = [33, 66, 100][n] || 33;
-    document.getElementById('progressBar').style.width = pct + '%';
-  }
-
-  function updateGwName(val) {
-    document.getElementById('gwNameDisplay').textContent = val ? val : 'your gateway';
+    document.getElementById('progressBar').style.width = [33, 66, 100][n] + '%';
   }
 
   function parseEndpoint(text) {
@@ -509,16 +485,14 @@
     return false;
   }
 
-  function autoSplit(el) {
-    parseEndpoint(el.value);
-  }
+  function autoSplit(el) { parseEndpoint(el.value); }
 
   async function pasteFromClipboard() {
     try {
       const text = await navigator.clipboard.readText();
       document.getElementById('epFull').value = text;
       if (!parseEndpoint(text)) {
-        alert('Could not parse endpoint.\nExpected format: host:port\nExample: proxy16.rt3.io:37081');
+        alert('Could not parse endpoint.\nExpected: host:port — e.g. proxy16.rt3.io:37081');
       }
     } catch {
       alert('Clipboard access denied. Please paste the endpoint directly into the field.');
