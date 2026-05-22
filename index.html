@@ -208,13 +208,13 @@
     font-family: var(--mono); font-size: .7rem;
     color: var(--text-dim); letter-spacing: 1px;
   }
-  .form-group input, .form-group select {
+  .form-group input {
     padding: 9px 14px;
     background: var(--bg); border: 1px solid var(--border);
     color: var(--text); font-family: var(--mono); font-size: .85rem;
     border-radius: 4px; outline: none; transition: border-color .2s;
   }
-  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+  .form-group input:focus { border-color: var(--accent); }
 
   table { width: 100%; border-collapse: collapse; margin: 12px 0; }
   th {
@@ -387,11 +387,11 @@
 
       <div class="card">
         <div class="card-title">INSTRUCTIONS</div>
-        <ul class="checklist" id="step0checks">
+        <ul class="checklist">
           <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>Log in to <a href="https://app.remote.it/#/devices" target="_blank">app.remote.it/#/devices</a></span></li>
           <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>In the search bar, type the gateway name (e.g. <code id="gwNameDisp0" style="color:var(--accent2);font-family:var(--mono)">CompanyTX-00</code>)</span></li>
           <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>Locate the device in the list and click it to open its services</span></li>
-          <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>Find the SSH service — note the <strong>Public Endpoint</strong> (host + port)</span></li>
+          <li><div class="check-icon" onclick="toggleCheck(this)"></div><span>Find the SSH service — note the <strong>Public Endpoint</strong> (host:port)</span></li>
         </ul>
       </div>
 
@@ -413,42 +413,49 @@
 
       <div class="card">
         <div class="card-title">ENTER PUBLIC ENDPOINT</div>
-        <p style="font-size:.88rem;margin-bottom:14px;">Copy the public endpoint from Remote.it. Example: <code style="color:var(--accent2);font-family:var(--mono)">proxy50.rt3.io:35531</code></p>
+        <p style="font-size:.88rem;margin-bottom:14px;">Copy the public endpoint from Remote.it and paste it below. Example: <code style="color:var(--accent2);font-family:var(--mono)">proxy16.rt3.io:37081</code></p>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>PASTE FULL ENDPOINT (host:port)</label>
+          <div style="display:flex;gap:10px;">
+            <input id="epFull" type="text" placeholder="proxy16.rt3.io:37081" oninput="autoSplitEndpoint(this)" style="flex:1;">
+            <button class="btn btn-ghost" onclick="pasteEndpoint()">📋 Paste</button>
+          </div>
+        </div>
+
         <div class="endpoint-row">
           <div class="form-group">
-            <label>HOST</label>
-            <input id="epHost" type="text" placeholder="proxy50.rt3.io" oninput="buildSSH()">
+            <label>HOST (auto-filled)</label>
+            <input id="epHost" type="text" placeholder="proxy16.rt3.io" oninput="buildSSH()">
           </div>
           <div class="form-group">
-            <label>PORT</label>
-            <input id="epPort" type="text" placeholder="35531" oninput="buildSSH()">
+            <label>PORT (auto-filled)</label>
+            <input id="epPort" type="text" placeholder="37081" oninput="buildSSH()">
           </div>
         </div>
-        <div class="form-group" style="margin-bottom:14px;">
+
+        <div class="form-group" style="margin-bottom:6px;">
           <label>USERNAME (default: binmaster)</label>
           <input id="epUser" type="text" placeholder="binmaster" oninput="buildSSH()" value="binmaster">
-        </div>
-        <div style="margin-bottom:6px;">
-          <button class="btn btn-ghost" onclick="pasteEndpoint()">📋 Paste full endpoint (host:port)</button>
         </div>
       </div>
 
       <div class="card">
         <div class="card-title">GENERATED POWERSHELL COMMAND</div>
-        <div class="ssh-box" id="sshBox">
-          <div class="ssh-cmd"><span class="ps-dollar">PS&gt;</span><span id="sshCmd">ssh -p &lt;port&gt; &lt;user&gt;@&lt;host&gt;</span></div>
+        <div class="ssh-box">
+          <div class="ssh-cmd"><span class="ps-dollar">PS&gt;</span><span id="sshCmd">ssh -p &lt;port&gt; binmaster@&lt;host&gt;</span></div>
           <button class="copy-btn" id="copyBtn" onclick="copySSH()">COPY</button>
         </div>
         <div class="terminal">
-          <span class="t-dim"># How the endpoint maps to the command:</span><br>
-          <span class="t-blue">proxy50.rt3.io</span>:<span class="t-green">35531</span>
-          &nbsp;→&nbsp; ssh -p <span class="t-green">35531</span> binmaster@<span class="t-blue">proxy50.rt3.io</span>
+          <span class="t-dim"># Endpoint → Command mapping:</span><br>
+          <span class="t-blue">proxy16.rt3.io</span>:<span class="t-green">37081</span>
+          &nbsp;→&nbsp; ssh -p <span class="t-green">37081</span> binmaster@<span class="t-blue">proxy16.rt3.io</span>
         </div>
       </div>
 
       <div class="alert alert-warn">
         <div class="alert-icon">⚠️</div>
-        <div>Remote.it endpoints are <strong>time-limited</strong>. If the connection drops, return to Remote.it and click the service again to get a fresh endpoint URL.</div>
+        <div>Remote.it endpoints are <strong>time-limited</strong>. If the connection drops, return to Remote.it and click the service again to get a fresh endpoint.</div>
       </div>
 
       <div class="nav-row">
@@ -482,10 +489,10 @@
       </div>
 
       <div class="terminal">
-        <span class="t-dim">PS C:\Users\You&gt; </span><span class="t-blue" id="terminalCmd">ssh -p 35531 binmaster@proxy50.rt3.io</span><br>
-        <span class="t-dim">The authenticity of host '[proxy50.rt3.io]:35531' can't be established.</span><br>
+        <span class="t-dim">PS C:\Users\You&gt; </span><span class="t-blue" id="terminalCmd">ssh -p 37081 binmaster@proxy16.rt3.io</span><br>
+        <span class="t-dim">The authenticity of host '[proxy16.rt3.io]:37081' can't be established.</span><br>
         <span class="t-dim">Are you sure you want to continue connecting (yes/no)?</span> <span class="t-green">yes</span><br>
-        <span class="t-dim">binmaster@proxy50.rt3.io's password: </span><span class="t-dim">••••••••</span><br>
+        <span class="t-dim">binmaster@proxy16.rt3.io's password: </span><span class="t-dim">••••••••</span><br>
         <span class="t-green">binmaster@GatewayHost:~$</span> <span class="cursor">█</span>
       </div>
 
@@ -578,7 +585,7 @@
           <tbody>
             <tr><td>1</td><td>Gateway is powered down</td><td>Check physical power / PDU / breaker</td></tr>
             <tr><td>2</td><td>Network cable / WiFi disconnected</td><td>Inspect Ethernet connection on gateway</td></tr>
-            <tr><td>3</td><td>Customer firewall blocking outbound traffic</td><td>Remote.it requires outbound TCP on certain ports — ask IT to whitelist</td></tr>
+            <tr><td>3</td><td>Customer firewall blocking outbound traffic</td><td>Remote.it requires outbound TCP — ask IT to whitelist</td></tr>
             <tr><td>4</td><td>Hardware damage to gateway unit</td><td>May need replacement unit shipped</td></tr>
           </tbody>
         </table>
@@ -668,19 +675,54 @@
     document.querySelectorAll('[id^="gwNameDisp"]').forEach(el => el.textContent = display);
   }
 
+  // Core parser — splits host:port and builds ssh command
+  function parseEndpoint(text) {
+    text = text.trim();
+    const lastColon = text.lastIndexOf(':');
+    if (lastColon !== -1) {
+      const host = text.substring(0, lastColon).trim();
+      const port = text.substring(lastColon + 1).trim();
+      if (host && /^\d+$/.test(port)) {
+        document.getElementById('epHost').value = host;
+        document.getElementById('epPort').value = port;
+        document.getElementById('epFull').value = text;
+        buildSSH();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Fires when user types/pastes into the full endpoint field
+  function autoSplitEndpoint(el) {
+    parseEndpoint(el.value);
+  }
+
+  // Clipboard paste button
+  async function pasteEndpoint() {
+    try {
+      const text = await navigator.clipboard.readText();
+      document.getElementById('epFull').value = text;
+      if (!parseEndpoint(text)) {
+        alert('Could not parse endpoint. Expected format: host:port\nExample: proxy16.rt3.io:37081');
+      }
+    } catch {
+      alert('Clipboard access denied. Please paste the endpoint directly into the field above.');
+    }
+  }
+
   function buildSSH() {
     const host = document.getElementById('epHost').value.trim();
     const port = document.getElementById('epPort').value.trim();
     const user = document.getElementById('epUser').value.trim() || 'binmaster';
     if (host && port) {
-      sshCommand = `ssh -p ${port} ${user}@${host}`;
+      sshCommand = 'ssh -p ' + port + ' ' + user + '@' + host;
     } else if (host) {
-      sshCommand = `ssh ${user}@${host}`;
+      sshCommand = 'ssh ' + user + '@' + host;
     } else {
       sshCommand = '';
     }
-    const display = sshCommand || 'ssh -p <port> <user>@<host>';
-    document.getElementById('sshCmd').textContent = display;
+    document.getElementById('sshCmd').textContent = sshCommand || 'ssh -p <port> binmaster@<host>';
     syncSSHDisplays();
   }
 
@@ -689,23 +731,7 @@
     const el2 = document.getElementById('sshCmdRepeat');
     const el3 = document.getElementById('terminalCmd');
     if (el2) el2.textContent = cmd;
-    if (el3) el3.textContent = sshCommand || 'ssh -p 35531 binmaster@proxy50.rt3.io';
-  }
-
-  async function pasteEndpoint() {
-    try {
-      const text = await navigator.clipboard.readText();
-      const match = text.trim().match(/^([^:]+):(\d+)$/);
-      if (match) {
-        document.getElementById('epHost').value = match[1];
-        document.getElementById('epPort').value = match[2];
-        buildSSH();
-      } else {
-        alert('Could not parse endpoint. Expected format: host:port (e.g. proxy50.rt3.io:35531)');
-      }
-    } catch {
-      alert('Clipboard access denied. Please paste host and port manually.');
-    }
+    if (el3) el3.textContent = sshCommand || 'ssh -p 37081 binmaster@proxy16.rt3.io';
   }
 
   function copySSH() {
@@ -729,7 +755,7 @@
   function copyCmd(cmd) {
     navigator.clipboard.writeText(cmd).then(() => {
       const el = document.getElementById('cmdCopied');
-      el.textContent = `Copied: ${cmd}`;
+      el.textContent = 'Copied: ' + cmd;
       el.style.opacity = '1';
       setTimeout(() => { el.style.opacity = '0'; }, 2500);
     });
@@ -741,7 +767,7 @@
   }
 
   function resetAll() {
-    ['epHost','epPort'].forEach(id => document.getElementById(id).value = '');
+    ['epHost','epPort','epFull'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('epUser').value = 'binmaster';
     document.getElementById('gwName').value = '';
     sshCommand = '';
