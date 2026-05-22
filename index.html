@@ -24,55 +24,43 @@
     --sans:      'Inter', sans-serif;
     --radius:    8px;
     --shadow:    0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-    --shadow-md: 0 4px 12px rgba(0,0,0,.08);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ── */
   header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 32px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: var(--shadow);
-    position: sticky; top: 0; z-index: 100;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 14px 32px; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100;
   }
   .logo { font-family: var(--mono); font-size: 1rem; color: var(--accent-dk); font-weight: 600; letter-spacing: .5px; }
   .logo span { color: var(--accent2); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .internal-badge {
+    font-size: .72rem; font-weight: 700; padding: 4px 10px; border-radius: 4px;
+    background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; letter-spacing: .3px;
+  }
   .status-pill {
-    font-size: .75rem; font-weight: 600;
-    padding: 4px 12px; border-radius: 20px;
+    font-size: .75rem; font-weight: 600; padding: 4px 12px; border-radius: 20px;
     background: #ecfdf5; border: 1px solid #6ee7b7; color: #059669;
   }
 
-  /* ── LAYOUT ── */
   .shell { display: grid; grid-template-columns: 200px 1fr; height: calc(100vh - 57px); }
 
   aside {
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 24px 0;
-    display: flex; flex-direction: column; gap: 2px;
+    background: var(--surface); border-right: 1px solid var(--border);
+    padding: 24px 0; display: flex; flex-direction: column; gap: 2px;
   }
   .aside-title {
-    font-size: .65rem; font-weight: 700; letter-spacing: 2px;
-    color: var(--text-dim); text-transform: uppercase;
-    padding: 0 18px 12px;
+    font-size: .65rem; font-weight: 700; letter-spacing: 2px; color: var(--text-dim);
+    text-transform: uppercase; padding: 0 18px 12px;
     border-bottom: 1px solid var(--border); margin-bottom: 6px;
   }
   .step-btn {
     display: flex; align-items: center; gap: 10px;
-    width: 100%; padding: 11px 18px;
-    background: none; border: none; cursor: pointer;
-    text-align: left; transition: background .15s; border-radius: 0;
+    width: 100%; padding: 11px 18px; background: none; border: none;
+    cursor: pointer; text-align: left; transition: background .15s;
   }
   .step-btn:hover { background: #f0f9ff; }
   .step-btn.active { background: #e0f2fe; border-right: 3px solid var(--accent); }
@@ -81,17 +69,14 @@
     width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
     font-family: var(--mono); font-size: .72rem; font-weight: 600;
-    border: 2px solid var(--border2); color: var(--text-dim);
-    transition: all .2s;
+    border: 2px solid var(--border2); color: var(--text-dim); transition: all .2s;
   }
   .step-btn.active .step-num { border-color: var(--accent); color: var(--accent); background: #e0f2fe; }
   .step-label { font-size: .88rem; font-weight: 600; color: var(--text-mid); }
   .step-btn.active .step-label { color: var(--accent-dk); }
   .step-sub { font-size: .7rem; color: var(--text-dim); margin-top: 1px; }
 
-  /* ── MAIN ── */
   main { overflow-y: auto; padding: 32px 40px; }
-
   .panel { display: none; }
   .panel.active { display: block; animation: fadeIn .2s ease; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
@@ -102,53 +87,37 @@
   h2 { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
   .subtitle { font-size: .82rem; color: var(--text-dim); margin-bottom: 24px; font-family: var(--mono); }
 
-  /* ── FLOW ITEMS ── */
   .flow { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
-
   .flow-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    box-shadow: var(--shadow);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow);
   }
   .flow-item.highlight { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14,165,233,.08); }
-
-  /* single row layout inside flow-item */
-  .flow-row {
-    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  }
   .flow-num {
     width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
     font-family: var(--mono); font-size: .75rem; font-weight: 700;
     background: #e0f2fe; border: 2px solid var(--accent); color: var(--accent-dk);
   }
-  .flow-label { font-size: .95rem; font-weight: 600; color: var(--text); white-space: nowrap; }
+  .flow-label { font-size: .95rem; font-weight: 600; color: var(--text); }
   .flow-desc { font-size: .85rem; color: var(--text-mid); }
   .flow-desc code { font-family: var(--mono); color: var(--accent-dk); background: #f0f9ff; padding: 1px 5px; border-radius: 3px; }
 
-  /* step 1 row: num + label + button all inline */
   .s1-row { display: flex; align-items: center; gap: 14px; }
-
-  /* step 2 row: num + label + desc all inline */
   .s2-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-
-  /* step 3: top row inline, input below */
   .s3-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
   .s3-input { display: flex; gap: 10px; align-items: center; }
   .s3-input input {
-    padding: 9px 14px; background: #f8fafc;
-    border: 1px solid var(--border2); color: var(--text);
-    font-family: var(--mono); font-size: .9rem;
+    padding: 9px 14px; background: #f8fafc; border: 1px solid var(--border2);
+    color: var(--text); font-family: var(--mono); font-size: .9rem;
     border-radius: var(--radius); outline: none; width: 280px;
     transition: border-color .2s, box-shadow .2s;
   }
   .s3-input input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14,165,233,.12); }
   .s3-input input::placeholder { color: var(--text-dim); }
 
-  /* step 4: top row inline, command box below */
   .s4-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+
   .ssh-box {
     background: #f8fafc; border: 1px solid var(--accent);
     border-radius: var(--radius); padding: 13px 18px;
@@ -157,27 +126,66 @@
   }
   .ssh-cmd { font-family: var(--mono); font-size: .95rem; color: #0369a1; word-break: break-all; }
   .ssh-cmd .ps-dollar { color: var(--text-dim); margin-right: 6px; }
+  .ssh-actions { display: flex; gap: 8px; flex-shrink: 0; }
   .copy-btn {
-    flex-shrink: 0; padding: 6px 14px;
-    font-family: var(--mono); font-size: .7rem; font-weight: 600;
+    padding: 6px 14px; font-family: var(--mono); font-size: .7rem; font-weight: 600;
     background: var(--accent); border: none; color: #fff;
     border-radius: 5px; cursor: pointer; transition: all .15s;
   }
   .copy-btn:hover { background: var(--accent-dk); }
   .copy-btn.copied { background: var(--accent2); }
 
-  /* ── ALERTS ── */
+  .ps-btn {
+    padding: 6px 14px; font-size: .75rem; font-weight: 700;
+    background: #1e3a5f; border: none; color: #fff;
+    border-radius: 5px; cursor: pointer; transition: all .15s;
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .ps-btn:hover { background: #162d4a; box-shadow: 0 2px 8px rgba(30,58,95,.3); }
+
+  .prompts { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .prompt-row {
+    display: flex; align-items: center; gap: 12px;
+    background: #f8fafc; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 10px 14px;
+  }
+  .prompt-tag {
+    font-family: var(--mono); font-size: .68rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+  }
+  .tag-yes { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+  .tag-pw  { background: #f0fdf4; color: #14532d; border: 1px solid #86efac; }
+  .prompt-text { font-size: .85rem; color: var(--text-mid); flex: 1; }
+  .prompt-value {
+    font-family: var(--mono); font-size: .88rem; font-weight: 600;
+    color: var(--text); background: #fff; border: 1px solid var(--border2);
+    padding: 4px 10px; border-radius: 5px; display: flex; align-items: center; gap: 8px;
+  }
+  .pw-hidden { letter-spacing: 3px; color: var(--text-dim); }
+  .pw-real { display: none; color: #0369a1; }
+  .pw-toggle {
+    background: none; border: none; cursor: pointer;
+    font-size: .7rem; color: var(--text-dim); padding: 2px 6px;
+    border-radius: 3px; transition: all .15s;
+  }
+  .pw-toggle:hover { background: var(--border); color: var(--text); }
+  .copy-pw {
+    background: none; border: 1px solid var(--border2); cursor: pointer;
+    font-size: .68rem; font-weight: 600; color: var(--text-mid);
+    padding: 3px 8px; border-radius: 4px; transition: all .15s; font-family: var(--mono);
+  }
+  .copy-pw:hover { border-color: var(--accent); color: var(--accent-dk); }
+  .copy-pw.copied { border-color: var(--accent2); color: var(--accent2); }
+
   .alert {
     border-radius: var(--radius); padding: 12px 16px; margin: 14px 0;
-    font-size: .85rem; line-height: 1.6;
-    display: flex; gap: 10px; align-items: flex-start;
+    font-size: .85rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start;
   }
-  .alert-warn { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
-  .alert-info { background: #f0f9ff; border: 1px solid #bae6fd; color: #0c4a6e; }
+  .alert-warn    { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+  .alert-info    { background: #f0f9ff; border: 1px solid #bae6fd; color: #0c4a6e; }
   .alert-success { background: #f0fdf4; border: 1px solid #86efac; color: #14532d; }
   .alert-icon { flex-shrink: 0; font-size: .95rem; margin-top: 1px; }
 
-  /* ── BUTTONS ── */
   .btn {
     padding: 8px 18px; border-radius: var(--radius);
     font-family: var(--sans); font-weight: 600; font-size: .85rem;
@@ -187,8 +195,6 @@
   .btn-primary:hover { background: var(--accent-dk); box-shadow: 0 2px 8px rgba(14,165,233,.3); }
   .btn-ghost { background: #fff; color: var(--text-mid); border: 1px solid var(--border2); }
   .btn-ghost:hover { border-color: var(--accent); color: var(--accent-dk); }
-  .btn-warn { background: #f59e0b; color: #fff; }
-  .btn-warn:hover { background: #d97706; }
   .btn-success { background: var(--accent2); color: #fff; }
   .btn-success:hover { background: #059669; }
   .btn-danger { background: #ef4444; color: #fff; }
@@ -199,7 +205,6 @@
     margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border);
   }
 
-  /* ── COMMANDS PAGE ── */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; box-shadow: var(--shadow); }
   .card-title { font-size: .68rem; font-weight: 700; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 14px; }
 
@@ -210,12 +215,10 @@
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #f8fafc; }
 
+  .cause-table td { padding: 7px 12px; }
+
   .quick-btns { display: flex; flex-wrap: wrap; gap: 8px; }
   #cmdCopied { font-family: var(--mono); font-size: .75rem; color: var(--accent2); margin-top: 10px; min-height: 18px; opacity: 0; transition: opacity .3s; }
-
-  /* ── TROUBLESHOOT ── */
-  .cause-table td { padding: 7px 12px; }
-  .cause-table tr:hover td { background: #f8fafc; }
 
   .checklist { list-style: none; }
   .checklist li { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: .88rem; color: var(--text-mid); }
@@ -223,15 +226,14 @@
   .check-icon {
     width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; margin-top: 1px;
     display: flex; align-items: center; justify-content: center;
-    font-size: .7rem; border: 2px solid var(--border2);
-    cursor: pointer; transition: all .15s; user-select: none; background: #fff;
+    font-size: .7rem; border: 2px solid var(--border2); cursor: pointer;
+    transition: all .15s; user-select: none; background: #fff;
   }
   .check-icon.checked { background: var(--accent2); border-color: var(--accent2); color: #fff; }
   .badge-offline { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: .72rem; font-weight: 600; background: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5; }
 
   a { color: var(--accent-dk); text-decoration: none; }
   a:hover { text-decoration: underline; }
-
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
@@ -249,17 +251,19 @@
 
 <header>
   <div class="logo">PS_JOURNEY <span>// Gateway Toolkit</span></div>
-  <div class="status-pill">● Remote.it Ready</div>
+  <div class="header-right">
+    <div class="internal-badge">🔒 INTERNAL USE ONLY</div>
+    <div class="status-pill">● Remote.it Ready</div>
+  </div>
 </header>
 
 <div class="shell">
 
-  <!-- SIDEBAR -->
   <aside>
     <div class="aside-title">Steps</div>
     <button class="step-btn active" onclick="goStep(0)" id="sb0">
       <div class="step-num">1</div>
-      <div><div class="step-label">Connect</div><div class="step-sub">Find & SSH in</div></div>
+      <div><div class="step-label">Connect</div><div class="step-sub">Find &amp; SSH in</div></div>
     </button>
     <button class="step-btn" onclick="goStep(1)" id="sb1">
       <div class="step-num">2</div>
@@ -304,7 +308,7 @@
           <div class="s3-top">
             <div class="flow-num">3</div>
             <div class="flow-label">Copy the public endpoint from Remote.it and paste it here</div>
-            <div class="flow-desc" style="color:var(--text-dim);">(e.g. <code>proxy16.rt3.io:37081</code>)</div>
+            <div class="flow-desc" style="color:var(--text-dim)">(e.g. <code>proxy16.rt3.io:37081</code>)</div>
           </div>
           <div class="s3-input">
             <input id="epFull" type="text" placeholder="proxy16.rt3.io:37081" oninput="autoSplit(this)">
@@ -316,12 +320,32 @@
         <div class="flow-item highlight">
           <div class="s4-top">
             <div class="flow-num">4</div>
-            <div class="flow-label">Your PowerShell command — copy, open PowerShell, paste &amp; press Enter</div>
-            <div class="flow-desc" style="color:var(--text-dim);">Enter password when prompted</div>
+            <div class="flow-label">Open PowerShell, paste this command, and press Enter</div>
           </div>
           <div class="ssh-box">
             <div class="ssh-cmd"><span class="ps-dollar">PS&gt;</span><span id="sshCmd">ssh -p &lt;port&gt; binmaster@&lt;host&gt;</span></div>
-            <button class="copy-btn" id="copyBtn" onclick="copySSH()">COPY</button>
+            <div class="ssh-actions">
+              <button class="copy-btn" id="copyBtn" onclick="copySSH()">COPY</button>
+              <button class="ps-btn" onclick="launchPS()"><span>⊞</span> PowerShell</button>
+            </div>
+          </div>
+
+          <div class="prompts">
+            <div class="prompt-row">
+              <span class="prompt-tag tag-yes">PROMPT 1</span>
+              <span class="prompt-text">When asked <em>"Are you sure you want to continue connecting?"</em></span>
+              <div class="prompt-value">type &nbsp;<strong>yes</strong> &nbsp;and press Enter</div>
+            </div>
+            <div class="prompt-row">
+              <span class="prompt-tag tag-pw">PROMPT 2</span>
+              <span class="prompt-text">When asked for the password</span>
+              <div class="prompt-value">
+                <span class="pw-hidden" id="pwHidden">••••••••••</span>
+                <span class="pw-real" id="pwReal">Bi*M*****P</span>
+                <button class="pw-toggle" onclick="togglePw()" id="pwToggle">Show</button>
+                <button class="copy-pw" id="copyPwBtn" onclick="copyPw()">COPY</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -351,9 +375,7 @@
       <div class="card">
         <div class="card-title">Command Reference</div>
         <table>
-          <thead>
-            <tr><th>Command</th><th>Purpose</th><th>Notes</th></tr>
-          </thead>
+          <thead><tr><th>Command</th><th>Purpose</th><th>Notes</th></tr></thead>
           <tbody>
             <tr>
               <td><code style="font-family:var(--mono);color:#0369a1">bcsensors</code></td>
@@ -361,7 +383,7 @@
               <td>Also sends manual readings to BinCloud</td>
             </tr>
             <tr>
-              <td><code style="font-family:var(--mono);color:#b91c1c">sudo reboot</code></td>
+              <td><code style="font-family:var(--mono);color:#b91c1c">sudo reboot now</code></td>
               <td>Reboot the gateway</td>
               <td>Only possible via SSH</td>
             </tr>
@@ -393,7 +415,7 @@
         <div class="card-title">Quick Copy</div>
         <div class="quick-btns">
           <button class="btn btn-success" onclick="copyCmd('bcsensors')">bcsensors</button>
-          <button class="btn btn-danger"  onclick="copyCmd('sudo reboot')">sudo reboot</button>
+          <button class="btn btn-danger"  onclick="copyCmd('sudo reboot now')">sudo reboot now</button>
           <button class="btn btn-ghost"   onclick="copyCmd('uptime')">uptime</button>
           <button class="btn btn-ghost"   onclick="copyCmd('ping -c 4 8.8.8.8')">ping</button>
           <button class="btn btn-ghost"   onclick="copyCmd('df -h')">df -h</button>
@@ -457,7 +479,9 @@
 </div>
 
 <script>
+  const PASSWORD = 'Bi*M*****P';
   let sshCommand = '';
+  let pwVisible = false;
 
   function goStep(n) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -503,6 +527,32 @@
     if (!sshCommand) return;
     navigator.clipboard.writeText(sshCommand).then(() => {
       const btn = document.getElementById('copyBtn');
+      btn.textContent = 'COPIED ✓'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function launchPS() {
+    try { window.location.href = 'ms-powershell:'; } catch(e) {}
+    setTimeout(() => {
+      const tip = document.createElement('div');
+      tip.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1e3a5f;color:#fff;padding:12px 18px;border-radius:8px;font-size:.82rem;font-family:Inter,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:9999;max-width:280px;line-height:1.6;';
+      tip.innerHTML = '<strong>Open PowerShell:</strong><br>Press <kbd style="background:rgba(255,255,255,.15);padding:1px 6px;border-radius:3px">Win + X</kbd> → Windows PowerShell<br><span style="opacity:.7;font-size:.75rem">or search PowerShell in Start menu</span>';
+      document.body.appendChild(tip);
+      setTimeout(() => tip.remove(), 5000);
+    }, 300);
+  }
+
+  function togglePw() {
+    pwVisible = !pwVisible;
+    document.getElementById('pwHidden').style.display = pwVisible ? 'none' : 'inline';
+    document.getElementById('pwReal').style.display   = pwVisible ? 'inline' : 'none';
+    document.getElementById('pwToggle').textContent   = pwVisible ? 'Hide' : 'Show';
+  }
+
+  function copyPw() {
+    navigator.clipboard.writeText(PASSWORD).then(() => {
+      const btn = document.getElementById('copyPwBtn');
       btn.textContent = 'COPIED ✓'; btn.classList.add('copied');
       setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
     });
